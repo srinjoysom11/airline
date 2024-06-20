@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Flights</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Flights</h1>
+        <form id="search-form">
+            <input type="text" id="departingFrom" name="departingFrom" placeholder="Departing From" required>
+            <input type="text" id="destination" name="destination" placeholder="Destination" required>
+            <input type="date" id="date" name="date" required>
+            <button type="submit">Search</button>
+        </form>
+        <table id="results-table" class="hidden">
+            <thead>
+                <tr>
+                    <th>Flight Name</th>
+                    <th>Departure Time</th>
+                    <th>Arrival Time</th>
+                    <th>Book</th>
+                </tr>
+            </thead>
+            <tbody id="results-tbody">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container hidden" id="booking-form-container">
+        <h1>Book Flight</h1>
+        <form id="booking-form">
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
+            <input type="text" id="phone" name="phone" placeholder="Your Phone Number" required>
+            <input type="hidden" id="flightId" name="flightId">
+            <button type="submit">Book</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const departingFrom = document.getElementById('departingFrom').value;
+            const destination = document.getElementById('destination').value;
+            const date = document.getElementById('date').value;
+
+            const response = await fetch('/search-flights', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ departingFrom, destination, date })
+            });
+
+            const flights = await response.json();
+
+            const resultsTable = document.getElementById('results-table');
+            const resultsTbody = document.getElementById('results-tbody');
+            resultsTbody.innerHTML = '';
+
+            if (flights.length > 0) {
+                flights.forEach(flight => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${flight.flightName}</td>
+                        <td>${new Date(flight.departureTime).toLocaleString()}</td>
+                        <td>${new Date(flight.arrivalTime).toLocaleString()}</td>
+                        <td><button onclick="bookFlight('${flight._id}')">Book</button></td>
+                    `;
+                    resultsTbody.appendChild(row);
+                });
+                resultsTable.classList.remove('hidden');
+            } else {
+                resultsTable.classList.add('hidden');
+                alert('No flights found.');
+            }
+        });
+
+        function bookFlight(flightId) {
+            document.getElementById('flightId').value = flightId;
+            document.getElementById('booking-form-container').classList.remove('hidden');
+        }
+
+        document.getElementById('booking-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const flightId = document.getElementById('flightId').value;
+
+            const response = await fetch('/book-flight', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, phone, flightId })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert(`Booking successful!\n\nFlight Details:\nName: ${result.flight.flightName}\nDeparture: ${new Date(result.flight.departureTime).toLocaleString()}\nArrival: ${new Date(result.flight.arrivalTime).toLocaleString()}\n\nYour Details:\nName: ${result.name}\nPhone: ${result.phone}`);
+            } else {
+                alert('Booking failed.');
+            }
+        });
+    </script>
+</body>
+</html>
