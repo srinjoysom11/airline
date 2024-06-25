@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Flights</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #555;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            transition: background-color 0.3s;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        th, td {
+            position: relative;
+        }
+        th:before, td:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: -10px;
+            width: 10px;
+            background-color: #4CAF50;
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+        th:hover:before, td:hover:before {
+            transform: scaleY(1);
+        }
+        th:first-child, td:first-child {
+            border-left: none;
+        }
+        .hidden {
+            display: none;
+        }
+        .table-title {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Flights</h1>
+        <form id="search-form">
+            <input type="text" id="departingFrom" name="departingFrom" placeholder="Departing From" required>
+            <input type="text" id="destination" name="destination" placeholder="Destination" required>
+            <input type="date" id="date" name="date" required>
+            <button type="submit">Search</button>
+        </form>
+        <table id="results-table" class="hidden">
+            <thead>
+                <tr>
+                    <th>Serial No.</th>
+                    <th>Flight Name</th>
+                    <th>Departure Time</th>
+                    <th>Arrival Time</th>
+                    <th>Book</th>
+                </tr>
+            </thead>
+            <tbody id="results-tbody">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container hidden" id="booking-form-container">
+        <h1>Book Flight</h1>
+        <form id="booking-form">
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
+            <input type="text" id="phone" name="phone" placeholder="Your Phone Number" required>
+            <input type="hidden" id="flightId" name="flightId">
+            <button type="submit">Book</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const departingFrom = document.getElementById('departingFrom').value;
+            const destination = document.getElementById('destination').value;
+            const date = document.getElementById('date').value;
+
+            const response = await fetch('/search-flights', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ departingFrom, destination, date })
+            });
+            const flights = await response.json();
+
+            const resultsTable = document.getElementById('results-table');
+            const resultsTbody = document.getElementById('results-tbody');
+            resultsTbody.innerHTML = '';
+            let serial_number=1;
+            if (flights.length > 0) {
+                flights.forEach(flight => {
+                    let row = document.createElement('tr');
+                    let second_row = document.createElement('tr');
+                    if (flight.firstLeg && flight.secondLeg) {
+                        row.innerHTML = `
+                            <td rowspan=2>${serial_number}</td>
+                            <td>${flight.firstLeg.flightName}</td>
+                            <td>${new Date(flight.firstLeg.departureTime).toLocaleString()}</td>
+                            <td>${new Date(flight.firstLeg.arrivalTime).toLocaleString()}</td>
+                            <td rowspan=2><button onclick="bookFlight('${flight.firstLeg._id}', '${flight.secondLeg._id}')">Book</button></td>
+                        `;
+                        resultsTbody.appendChild(row);
+                        second_row.innerHTML = `
+                            <td>${flight.secondLeg.flightName}</td>
+                            <td>${new Date(flight.secondLeg.departureTime).toLocaleString()}</td>
+                            <td>${new Date(flight.secondLeg.arrivalTime).toLocaleString()}</td>
+                        `;
+                        resultsTbody.appendChild(second_row);
+                    } else {
+                        row.innerHTML = `
+                            <td>${serial_number}</td>
+                            <td>${flight.flightName}</td>
+                            <td>${new Date(flight.departureTime).toLocaleString()}</td>
+                            <td>${new Date(flight.arrivalTime).toLocaleString()}</td>
+                            <td><button onclick="bookFlight('${flight._id}')">Book</button></td>
+                        `;
+                        resultsTbody.appendChild(row);
+                    }
+                    serial_number=serial_number+1;
+                });
+                resultsTable.classList.remove('hidden');
+            } else {
+                resultsTable.classList.add('hidden');
+                alert('No flights found.');
+            }
+        });
+
+        function bookFlight(flightId, connectingFlightId = null) {
+            document.getElementById('flightId').value = flightId;
+            document.getElementById('booking-form-container').classList.remove('hidden');
+
+            if (connectingFlightId) {
+                document.getElementById('flightId').dataset.connectingFlightId = connectingFlightId;
+            } else {
+                delete document.getElementById('flightId').dataset.connectingFlightId;
+            }
+        }
+
+        document.getElementById('booking-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const flightId = document.getElementById('flightId').value;
+            const connectingFlightId = document.getElementById('flightId').dataset.connectingFlightId;
+
+            const bookingData = { name, phone, flightId };
+            if (connectingFlightId) {
+                bookingData.connectingFlightId = connectingFlightId;
+            }
+
+            const response = await fetch('/book-flight', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bookingData)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                const flightDetails = `Flight Details:\n${result.flight.flightName ? 'Name: ' + result.flight.flightName : ''}\nDeparture: ${new Date(result.flight.departureTime).toLocaleString()}\nArrival: ${new Date(result.flight.arrivalTime).toLocaleString()}`;
+                const connectingFlightDetails = result.connectingFlight ? `\n\nConnecting Flight:\nName: ${result.connectingFlight.flightName}\nDeparture: ${new Date(result.connectingFlight.departureTime).toLocaleString()}\nArrival: ${new Date(result.connectingFlight.arrivalTime).toLocaleString()}` : '';
+                alert(`Booking successful!\n\n${flightDetails}${connectingFlightDetails}\n\nYour Details:\nName: ${result.name}\nPhone: ${result.phone}`);
+            } else {
+                alert('Booking failed.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 300px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 22px); /* Subtract padding and border */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>Welcome to your Dashboard!</h1>
+        <p>You have successfully logged in.</p>
+    </div>
+    <div class="flight-form">
+        <h2>Add Flight Details</h2>
+        <form action="/add-flight" method="POST">
+            <label for="flightName">Flight Name:</label>
+            <input type="text" id="flightName" name="flightName" required><br>
+            
+            <label for="departureTime">Departure Time:</label>
+            <input type="datetime-local" id="departureTime" name="departureTime" required><br>
+            
+            <label for="departingFrom">Departing From:</label>
+            <input list="cities" id="departingFrom" name="departingFrom" required><br>
+            
+            <label for="destination">Destination:</label>
+            <input list="cities" id="destination" name="destination" required><br>
+            
+            <label for="arrivalTime">Arrival Time:</label>
+            <input type="datetime-local" id="arrivalTime" name="arrivalTime" required><br>
+            <label for="capacity">Capacity</label>
+            <input type="number" id="capacity" name="capacity" required><br>
+            <button type="submit">Add Flight</button>
+        </form>
+        <datalist id="cities">
+            <datalist id="cities">
+                <option value="Mumbai"></option>
+                <option value="Delhi"></option>
+                <option value="Bangalore"></option>
+                <option value="Hyderabad"></option>
+                <option value="Chennai"></option>
+                <option value="Kolkata"></option>
+                <option value="Pune"></option>
+                <option value="Ahmedabad"></option>
+                <option value="Jaipur"></option>
+                <option value="Goa"></option>
+                <!-- Add more cities as needed -->
+            </datalist>            
+        </datalist>
+    </div>
+</body>
+</html>

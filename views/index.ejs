@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Bar</title>
+    <style>
+        /* Global reset and body styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-image: url('airline.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            position: relative; /* Required for overlay */
+        }
+        /* Overlay styles */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(169, 169, 169, 0.5); /* Grey color with 50% transparency */
+            z-index: -1; /* Ensures the overlay is behind all content */
+        }
+
+        /* Style for the navigation bar */
+        nav {
+            background-color: #004085; /* Darker blue color for the navigation bar */
+            padding: 15px 40px; /* Increased padding inside the navigation bar */
+        }
+        nav ul {
+            list-style-type: none; /* Removes default list styling */
+            margin: 0;
+            padding: 0;
+            text-align: left; /* Aligns the list items to the left */
+        }
+        nav ul li {
+            display: inline-block; /* Displays list items as blocks */
+            margin-right: 20px; /* Adds space between each list item */
+        }
+        nav ul li a {
+            text-decoration: none; /* Removes underline from links */
+            color: white; /* Sets text color to white */
+            padding: 12px 20px; /* Adds padding inside each link */
+            font-size: 18px; /* Increased font size */
+            display: block; /* Ensures full clickable area */
+        }
+        nav ul li a:hover {
+            background-color: #002752; /* Darker blue color on hover */
+        }
+
+        /* Center content */
+        .center-content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            position: relative; /* Ensure content is above the overlay */
+            background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+            z-index: 1; /* Ensure content is above the overlay */
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/admin">Click here to get started..</a></li>
+            <!-- <li><a href="/search">Search Flights</a></li> -->
+        </ul>
+    </nav>
+    
+    <div class="center-content">
+        <p>Welcome to JetSetGo</p>
+        <p>Booking flights is possible in seconds with JetSetGo</p>
+        <p>log in to book a flight</p>
+    </div>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Success</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Booking Successful!</h1>
+        <p>Flight Details:</p>
+        <p id="flight-details"></p>
+        <p>Your Details:</p>
+        <p id="user-details"></p>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const flightName = params.get('flightName');
+        const departureTime = params.get('departureTime');
+        const arrivalTime = params.get('arrivalTime');
+        const userName = params.get('name');
+        const userPhone = params.get('phone');
+
+        document.getElementById('flight-details').textContent = `Flight Name: ${flightName}\nDeparture Time: ${departureTime}\nArrival Time: ${arrivalTime}`;
+        document.getElementById('user-details').textContent = `Name: ${userName}\nPhone: ${userPhone}`;
+    </script>
+</body>
+</html>
