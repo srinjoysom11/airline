@@ -1,10 +1,10 @@
 ## JetSetGo
 ### Overview
 It is an airline management website where consumers will be shown flights based on starting point, destination and journey date.
-The is an admin login option where the admin may login and enter new flight informations in database .
+There is an admin login option where the admin may login and enter new flight informations in database.
 When user searches for flight he will be shown flights(direct and connecting) from this database accordingly and when flights are full they will be autommatically deleted from the database.
 ### Tools and framework used 
--HTML/CSS ,Node.js,MongoDB
+-HTML/CSS , Node.js, Express.js, MongoDB
 ### To run the website 
 -Download or copy the files from this repository
 sh 
@@ -22,5 +22,5 @@ run server.js
 
 -Subhrojyoti Kunda Roy 
 
--Sneh Dhadhania 
+-Sneh Dadhania 
 
