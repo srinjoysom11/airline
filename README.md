@@ -1,6 +1,6 @@
 ## JetSetGo
 ### Overview
-It is an airline management website where consumers will be shown flights based on starting point, destination and journey date.
+It is an airline management website where users will be shown flights based on starting point, destination and journey date.
 There is an admin login option where the admin may login and enter new flight informations in database.
 When user searches for flight he will be shown flights(direct and connecting) from this database accordingly and when flights are full they will be autommatically deleted from the database.
 ### Tools and framework used 
