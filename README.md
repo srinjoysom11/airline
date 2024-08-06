@@ -20,7 +20,7 @@ run server.js
 ### Contributors 
 -Srinjoy Som 
 
--Subhrojyoti Kunda Roy 
+-Subhrajyoti Kunda Roy 
 
 -Sneh Dadhania 
 
